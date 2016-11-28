@@ -1,8 +1,8 @@
 ##' ---
-##' title: Probability and the Enigma Machine
-##' author: ###
-##' date: November 2016
-##' output: github_document
+##' title: "Probability and the Enigma Machine"
+##' author: "###"
+##' date: "`r format(Sys.Date())`"
+##' output: "github_document"
 ##' ---
 
 ##' Housekeeping
