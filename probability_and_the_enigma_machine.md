@@ -18,13 +18,13 @@ options(scipen = 999)
 Background Information
 
 ``` r
-## The 'Little' Enigma
+## The Enigma Machine
 ## The machine has 5 different rotors, each of which comes 
 ## with 10 pins (0 to 9). The plugboard contains 26 holes, 
 ## corresponding to the 26 letters of the alphabet. There are 
 ## 13 cables to connect all possible pairs of letters.
 ## To either de/encode a message, provide the
-## Little Enigma machine with a correct 5-digit passcode 
+## Enigma machine with a correct 5-digit passcode 
 ## to align the rotors AND a correct configuration of the plugboard.
 ## 
 ## k permutations of n is denoted as nPk, which equals n!/(n - k)!
@@ -72,7 +72,7 @@ total.plugboard
 
     ## [1] 7905853580625
 
-What is the total number of possible settings for the Little Enigma machine?
+What is the total number of possible settings for the Enigma machine?
 
 ``` r
 ## For every 5-digit passcode, we have the total calculated for the plugboard, so
@@ -92,6 +92,8 @@ If 1 message is selected at random, which machine is most likely responsible for
 ## 4. Crib 340, 17%
 ## 5. Hut 6 210, 20%
 ## 
+## In practice, German procedural flaws (rather than crytographic weaknesses) 
+## and capturing the hardware enabled Allied forces to break the code in WWII. 
 ## This is akin to the probability problem of drawing a red marble  
 ## from a sack of 3 red marbles and 7 white marbles
 messages <- c(300, 400, 250, 340, 210)  # Total number of messages decoded by each team
@@ -117,18 +119,18 @@ plugboard()
 ```
 
     ##      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12] [,13]
-    ## [1,] "p"  "b"  "x"  "u"  "l"  "t"  "q"  "m"  "g"  "w"   "n"   "d"   "h"  
-    ## [2,] "k"  "r"  "s"  "v"  "i"  "e"  "a"  "c"  "y"  "j"   "f"   "o"   "z"
+    ## [1,] "c"  "q"  "i"  "r"  "o"  "z"  "k"  "t"  "g"  "y"   "s"   "b"   "u"  
+    ## [2,] "j"  "f"  "p"  "a"  "m"  "e"  "x"  "w"  "n"  "l"   "v"   "d"   "h"
 
 ``` r
-p.config <- plugboard()
+config <- plugboard()
 ```
 
 Write a function that encodes/decodes a message given by plugboard().
 
 ``` r
 ## Input should be result of plugboard() and message; output should by decoded message.
-little.enigma <- function(x, plug.config) {
+enigma <- function(x, plug.config) {
   ## Lower cases indicate letters that need to be switched
   ## Upper cases indicate letters that have been changed
   x.encoded <- tolower(x)
@@ -145,18 +147,17 @@ little.enigma <- function(x, plug.config) {
   return(x.encoded)
 }
 
-text <- "Hello, World!"
-
-## Encode text using the new function
-text.encoded <- little.enigma(text, p.config)
+## Encode a message using the new function
+text <- "now we can win the war"
+text.encoded <- enigma(text, p.config)
 text.encoded
 ```
 
-    ## [1] "tyvvx, uxpvn!"
+    ## [1] "dxu uy bmd uqd hty ump"
 
 ``` r
-## Decode text using the new function
-little.enigma(text.encoded, p.config)
+## Decode the message using the new function
+enigma(text.encoded, p.config)
 ```
 
-    ## [1] "hello, world!"
+    ## [1] "now we can win the war"
