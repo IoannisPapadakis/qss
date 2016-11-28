@@ -1,6 +1,7 @@
 The Birthday Paradox
 ================
-November 2016
+###
+2016-11-28
 
 Housekeeping
 
@@ -108,4 +109,4 @@ answer <- event / sims
 answer
 ```
 
-    ## [1] 0.521
+    ## [1] 0.526
