@@ -1,7 +1,8 @@
 ##' ---
-##' title: What is the conditional probability of having HIV if you test positive?
-##' author: Todd K. Hartman
-##' date: November 2016
+##' title: "What is the conditional probability of having HIV if you test positive?"
+##' author: "Todd K. Hartman"
+##' date: "`r format(Sys.Date())`"
+##' output: "github_document"
 ##' ---
 
 ##' Background information
@@ -15,6 +16,7 @@
 ##
 ## Prevalence rates for adults (aged 18-49) in 2014; CIA World Factbook
 ## weblink: https://www.cia.gov/library/publications/the-world-factbook/rankorder/rawdata_2155.txt
+## http://aidsinfo.unaids.org/
 ## Prevalence of HIV in the UK: 3.3 cases per 1,000
 
 ##' Housekeeping
@@ -57,6 +59,3 @@ y <- ggplot(hiv3, aes(y = country2, x = pr.hiv)) +
      xlab("Probability") +
      ylab("")
 grid.arrange(x, y, ncol=2)
-
-
-
