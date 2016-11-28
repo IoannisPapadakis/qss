@@ -1,7 +1,8 @@
 ##' ---
-##' title: Scraping Twitter Data Using R
-##' author: Todd K. Hartman
-##' date: 2016
+##' title: "Scraping Twitter Data Using R"
+##' author: "Todd K. Hartman"
+##' date: "`r format(Sys.Date())`"
+##' output: "github_document"
 ##' ---
 
 ##' IMPORTANT
