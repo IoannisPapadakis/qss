@@ -1,6 +1,6 @@
 ##' ---
 ##' title: The Birthday Paradox
-##' author: Todd K. Hartman
+##' author: ***
 ##' date: November 2016
 ##' ---
 
