@@ -1,6 +1,6 @@
 ##' ---
 ##' title: Who wrote the 11 unassigned Federalist Papers? 
-##' author: Todd K. Hartman
+##' author: ***
 ##' date: November 2016
 ##' ---
 
