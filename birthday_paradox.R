@@ -1,6 +1,6 @@
 ##' ---
 ##' title: The Birthday Paradox
-##' author: ***
+##' author: ###
 ##' date: November 2016
 ##' ---
 
