@@ -50,7 +50,7 @@ How many possible combinations does the plugboard provide?
 ## This sequential selection process continues until all 13 pairs are selected.
 n <- seq(from = 26, to = 2, by = -2)  # Countdown from 26 by 2s 
 ## Use the function for combinations, choose(n, k), 
-## to calculate sequetial combinations for the plugboard
+## to calculate sequential combinations for the plugboard
 nCk <- choose(n, 2)
 ## Total number of combinations: 26C2 * 24C2 * 22C2 ... 2C2
 total.combinations <- prod(nCk)
@@ -92,7 +92,7 @@ If 1 message is selected at random, which machine is most likely responsible for
 ## 4. Crib 340, 17%
 ## 5. Hut 6 210, 20%
 ## 
-## In practice, German procedural flaws (rather than crytographic weaknesses) 
+## In practice, German procedural flaws (rather than cryptographic weaknesses) 
 ## and capturing the hardware enabled Allied forces to break the code in WWII. 
 ## This is akin to the probability problem of drawing a red marble  
 ## from a sack of 3 red marbles and 7 white marbles
