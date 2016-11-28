@@ -16,7 +16,7 @@ Housekeeping
 # Render the R script from the command line (not this R script)!
 # rmarkdown::render("twitter_textual_analysis.R")
 
-## Set the workding directory
+## Set the working directory
 # setwd("YOUR DIRECTORY HERE")
 
 ## Load packages via pacman
