@@ -1,7 +1,8 @@
 ##' ---
-##' title: The Birthday Paradox
-##' author: ###
-##' date: November 2016
+##' title: "The Birthday Paradox"
+##' author: "###"
+##' date: "`r format(Sys.Date())`"
+##' output: "github_document"
 ##' ---
 
 ##' Housekeeping
