@@ -41,7 +41,7 @@ pr.hiv.uk <- .991*.0028 / ((.991*.0028)+(.004*.9972))
 World: Conditional probability of HIV given a positive test
 
 ``` r
-## Pull the data from the CIA World Factbook website (.txt file wtih fixed widths)
+## Pull the data from the CIA World Factbook website (.txt file with fixed widths)
 hiv <- read.fwf("https://www.cia.gov/library/publications/the-world-factbook/rankorder/rawdata_2155.txt",
                       width = c(7,51,4))  
 dimnames(hiv)[[2]] <- c("id", "country", "percent")  # Add variables names
