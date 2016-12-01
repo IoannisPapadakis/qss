@@ -1,4 +1,4 @@
-Who Brexited? Mapping the 2016 EU Referendum Vote
+Mapping US Presidential Elections
 ================
 Todd K. Hartman
 2016-12-01
