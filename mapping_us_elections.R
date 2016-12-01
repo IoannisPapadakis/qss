@@ -1,5 +1,5 @@
 ##' ---
-##' title: "Who Brexited? Mapping the 2016 EU Referendum Vote"
+##' title: "Mapping US Presidential Elections"
 ##' author: "Todd K. Hartman"
 ##' date: "`r format(Sys.Date())`"
 ##' output: "github_document"
