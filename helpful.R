@@ -26,6 +26,20 @@ file.choose()  # Find the file in the working directory
 ## Use 'with' to avoid retyping the data.frame
 with(dataset, summary(variable))
 
+## Using factors
+## Income
+levels(df$Q20)
+df$inc <- df$Q20
+df$inc[df$inc == "Don't know / Prefer not to answer"] <- NA
+df$income <- 
+    factor(df$inc,
+           levels=c("Less than 10,000 GBP", "10,000 to 19,999 GBP", "20,000 to 29,999 GBP",
+                    "30,000 to 39,999 GBP", "40,000 to 49,999 GBP", "50,000 to 59,999 GBP",
+                    "60,000 to 69,999 GBP", "70,000 to 99,999 GBP", "100,000 to 149,999 GBP", 
+                    "150,000 GBP and over"),
+           ordered = TRUE)
+levels(df$income)
+
 ## UK NUTS 1 Regions (12 total; 9 in England, plus Wales, Scotland, and Northern Ireland)
 df$region <- "999"
 df$region[df$Q18 %in% c("Berkshire", "Buckinghamshire", "East Sussex", "Hampshire", 
