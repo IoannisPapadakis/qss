@@ -90,6 +90,10 @@ corpus.prep <- tm_map(corpus.raw, content_transformer(removeURL))
 removeNumPunct <- function(x) gsub("[^[:alpha:][:space:]]*", "", x)  # function to remove extraneous characters
 corpus.prep <- tm_map(corpus.prep, content_transformer(removeNumPunct))
 
+## Remove 'amp'
+removeAmp <- function(x) gsub("amp", "", x) 
+corpus.prep <- tm_map(corpus.prep, content_transformer(removeAmp))
+
 ## Remove extra whitespace in the data
 corpus.prep <- tm_map(corpus.prep, stripWhitespace)
 
@@ -102,6 +106,13 @@ corpus <- tm_map(corpus.prep, removeWords, stopwords("english"))
 ## Reduce words to their root form 
 corpus.copy <- corpus  # Make a copy for later word retrieval
 # corpus <- tm_map(corpus, stemDocument)
+
+## Check the contents of the processed tweets
+k <- 20  # Number of tweets to display
+for(i in 1:k){
+    cat(paste("Tweet", i))
+    print(corpus[[i]]$content)
+}
 
 ##' Create a Term-Document Matrix
 tdm <- TermDocumentMatrix(corpus)
