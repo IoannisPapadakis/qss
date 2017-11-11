@@ -20,33 +20,33 @@
 pacman::p_load(ggplot2, httr, PKI, RColorBrewer, rmarkdown, ROAuth, SnowballC, tm, twitteR, wordcloud)
 
 ##' Store encrypted Twitter key and token as a list in separate R.Data file [ ONLY RUN ONCE ]
-# ## Create public & private encryption keys
-# rsa.key <- PKI.genRSAkey(bits = 4096L)  # Create a pair of encryption keys
-# public.key <- PKI.save.key(rsa.key, private=FALSE)  # Get your public encryption key
-# private.key <- PKI.save.key(rsa.key)  # Get your private encryption key
-# keys <- list(public.key, private.key)  # Store the encryption keys in a list object
-# save(keys, file = "encryption_keys.RData")  # Save the encryption keys in a separate file
-#
-# ## Encrypt Twitter keys and tokens using your PUBLIC encryption key
-# public.rsa <- PKI.load.key(keys[[1]])  # Load your public encryption key
-# api.key <- PKI.encrypt(charToRaw("ENTER YOUR TWITTER API KEY HERE"), public.rsa)
-# api.secret <- PKI.encrypt(charToRaw("ENTER YOUR TWITTER API KEY SECRET HERE"), public.rsa)
-# access.token <- PKI.encrypt(charToRaw("ENTER YOUR TWITTER TOKEN HERE"), public.rsa)
-# access.token.secret <- PKI.encrypt(charToRaw("ENTER YOUR TWITTER TOKEN SECRET HERE"), public.rsa)
-# twitter_keys <- list(api.key, api.secret, access.token, access.token.secret)  # Store the encrypted Twitter keys in a list object
-# save(twitter_keys, file = "twitter_keys.RData") # Save the Twitter keys in a separate file
-#
-# ## Clear the workspace and history to keep secret information from prying eyes
-# rm(rsa.key, public.key, private.key, public.rsa, api.key, api.secret, 
-#   access.token, access.token.secret)  # Remove keys
-#
-# clearhistory <- function() {  # Create a function to wipe your R history
-#    write("", file=".blank")
-#    loadhistory(".blank")
-#    unlink(".blank")
-#  }
-# clearhistory()  # Remove sensitive data from your R History (CLEARS ALL OF YOUR HISTORY)
-#
+## Create public & private encryption keys
+rsa.key <- PKI.genRSAkey(bits = 4096L)  # Create a pair of encryption keys
+public.key <- PKI.save.key(rsa.key, private=FALSE)  # Get your public encryption key
+private.key <- PKI.save.key(rsa.key)  # Get your private encryption key
+keys <- list(public.key, private.key)  # Store the encryption keys in a list object
+save(keys, file = "encryption_keys.RData")  # Save the encryption keys in a separate file
+
+## Encrypt Twitter keys and tokens using your PUBLIC encryption key
+public.rsa <- PKI.load.key(keys[[1]])  # Load your public encryption key
+api.key <- PKI.encrypt(charToRaw("ENTER YOUR TWITTER API KEY HERE"), public.rsa)
+api.secret <- PKI.encrypt(charToRaw("ENTER YOUR TWITTER API KEY SECRET HERE"), public.rsa)
+access.token <- PKI.encrypt(charToRaw("ENTER YOUR TWITTER TOKEN HERE"), public.rsa)
+access.token.secret <- PKI.encrypt(charToRaw("ENTER YOUR TWITTER TOKEN SECRET HERE"), public.rsa)
+twitter_keys <- list(api.key, api.secret, access.token, access.token.secret)  # Store the encrypted Twitter keys in a list object
+save(twitter_keys, file = "twitter_keys.RData") # Save the Twitter keys in a separate file
+
+## Clear the workspace and history to keep secret information from prying eyes
+rm(rsa.key, public.key, private.key, public.rsa, api.key, api.secret, 
+   access.token, access.token.secret)  # Remove keys
+
+clearhistory <- function() {  # Create a function to wipe your R history
+    write("", file=".blank")
+    loadhistory(".blank")
+    unlink(".blank")
+  }
+clearhistory()  # Remove sensitive data from your R History (CLEARS ALL OF YOUR HISTORY)
+
 
 ##' Load your Twitter API Keys
 load("encryption_keys.RData")  # Load your encryption keys
