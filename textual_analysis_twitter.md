@@ -150,6 +150,10 @@ corpus.prep <- tm_map(corpus.raw, content_transformer(removeURL))
 removeNumPunct <- function(x) gsub("[^[:alpha:][:space:]]*", "", x)  # function to remove extraneous characters
 corpus.prep <- tm_map(corpus.prep, content_transformer(removeNumPunct))
 
+## Remove 'amp'
+removeAmp <- function(x) gsub("amp", "", x) 
+corpus.prep <- tm_map(corpus.prep, content_transformer(removeAmp))
+
 ## Remove extra whitespace in the data
 corpus.prep <- tm_map(corpus.prep, stripWhitespace)
 
@@ -167,7 +171,7 @@ corpus.copy <- corpus  # Make a copy for later word retrieval
 k <- 20  # Number of tweets to display
 for(i in 1:k){
     cat(paste("Tweet", i))
-    print(content(corpus[[i]]))
+    print(corpus[[i]]$content)
 }
 ```
 
