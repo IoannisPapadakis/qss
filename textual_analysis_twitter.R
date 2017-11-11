@@ -103,13 +103,6 @@ corpus <- tm_map(corpus.prep, removeWords, stopwords("english"))
 corpus.copy <- corpus  # Make a copy for later word retrieval
 # corpus <- tm_map(corpus, stemDocument)
 
-## Check the contents of the processed tweets
-k <- 20  # Number of tweets to display
-for(i in 1:k){
-    cat(paste("Tweet", i))
-    print(content(corpus[[i]]))
-}
-
 ##' Create a Term-Document Matrix
 tdm <- TermDocumentMatrix(corpus)
 tdm
