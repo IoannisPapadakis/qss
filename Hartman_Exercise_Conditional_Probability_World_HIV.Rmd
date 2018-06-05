@@ -1,0 +1,199 @@
+---
+title: 'Lab Exercise: Conditional Probability and Global HIV'
+author: "Todd K Hartman"
+date: "Last updated `r format(Sys.Date())`"
+output: 
+    pdf_document: default
+    html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
+```
+
+## Getting Started
+Suppose that your friend Jamie has called you in a panic because s/he recently tested positive for HIV using an oral, rapid response kit. Given what you have learned about conditional probability, we're going to determine how likely Jamie actually has the disease given a single positive test result. Then we'll compare this result to the probability of having the disease globally using data from the CIA World Fact Book. Finally, we'll visualize these results to see if this helps elucidate any particular patterns.
+
+## How Does Medical Testing Work? 
+Let's assume that the HIV testing is done using the OraQuick HIV Test. If you visit their website, you should be able to find details about the test's sensitivity and specificity. Recall that *sensitivity* tells us the 'true positive rate', or the probability that the test will correctly show a positive result for someone that actually has the disease. In contrast, *specificity* tells us the 'true negative rate', or the probability that the test will correctly show a negative result for someone that is not infected with the disease. With these two values, we can determine the false positive and false negative rates that are needed for our calculations.
+
+Below are results taken from the OraQuick website (you should check the website to make sure you're using the most recent data): <http://www.oraquick.com/>. These test results are based upon data from a clinical study of 4,999 subjects, who were unaware of the HIV status prior to taking the test. 
+
+OraQuick Test Specificity: 91.67% (88/96)
+OraQuick Test Sensitivity: 99.9% (4,902/4,903)
+
+Using the information for test sensitivity, the true positive rate is 91.67%, which can also be written as the pr(Positive|HIV) = .9167, and the false negative rate is 8.33%, which is pr(Negative|HIV) = .0833. The true positive rate neans that the test accurately returns a positive result for those infected with the disease, while the false negative rate means that the test shows a negative result even though the person actually has HIV.
+
+Now, let's examine what the test specificity tells us. The true negative rate is 99.9%, which can be written as pr(Negative|No HIV) = .999. This means that the test shows a negative result for someone that is not infected with HIV 99.9% of the time. The remaining 0.10% of the time, the test shows a false positive, meaning that the test returns a positive result even though the person is not infected with the disease (yikes!). That value is very small but nonzero (1 out of every 1,000 people taking the test will have a false positive test result); it is denoted by pr(Positive|No HIV) = .001.
+
+## HIV at Home and Abroad
+We also need to determine the *prevalemce* of HIV in the population, which tells us how many people in the UK are infected with HIV. Thus, prevalence is a measure of how widespread the disease is in the population. The CIA World Fact Book is useful because it provides us with the estimated prevalence of HIV in various countries around the world.
+
+CIA World Factbook HIV prevalence rates for adults (aged 18-49): https://www.cia.gov/library/publications/resources/the-world-factbook/
+
+However, if you look at the data from the CIA, you'll notice that it doesn't include data on the prevalence of HIV in the UK. So, let's get that information from Public Health England: https://www.gov.uk/government/publications/hiv-in-the-united-kingdom
+
+It is estimated that 101,200 people are living with HIV in the UK (you should check the website yourself to confirm this number), which means that the prevalence of the disease in the UK is 0.16% (number of HIV cases / total population). In other words, there are 1.6 HIV infections for every 1,000 in the UK. 
+
+## Downloading the data
+Before we can calculate the conditional probability for Jamie (and the world!), let's load the data manipulation and visualization packages needed to make the various figures. This is also a good time to make sure that we've set the working directory. 
+
+```{r, echo=TRUE}
+## Load packages via 'pacman' package manager
+pacman::p_load(googleVis, tmap, tmaptools)
+  
+## Set the working directory
+setwd("ENTER YOUR WORKING DIRECTORY HERE")
+```
+
+We're going to be downloading data directly from the CIA World Fact Book, which they've made available as a .txt file for direct importing into R: https://www.cia.gov/library/publications/the-world-factbook/rankorder/rawdata_2155.txt
+
+```{r, echo=TRUE}
+## Enter the URL and extract the file name
+url.df <- "https://goo.gl/eouHbt"
+file.df <- "rawdata_2155.txt"
+
+## Only download the file if it doesn't exist in the working directory
+if (!file.exists(file.df))
+    download.file(url = url.df, destfile = file.df)
+
+## Import the data (.txt file using fixed widths)
+## (Open this file in Excel to determine columun widths)
+hiv <- read.fwf(file.df, width = c(7, 51, 4), strip.white = TRUE)  
+dimnames(hiv)[[2]] <- c("id", "country", "percent")  # Add variables names
+head(hiv)
+
+```
+
+## Append the UK Prevalence Data for Comparison
+Let's not forget to include the UK data in our calculations; otherwise, we'll be able to tell Jamie the the probability of infection all over the world *except* in the UK!
+
+```{r, echo=TRUE}
+## Convert factor name to string so we can add the UK
+hiv$country <- as.character(hiv$country)
+
+## Append UK data to end of dataset (update prevalence if needed)
+hiv.rows <- nrow(hiv)
+hiv[hiv.rows + 1, ] <- c(hiv.rows + 1, "United Kingdom", .16)
+
+## Check that the data looks OK
+hiv[hiv.rows + 1, ]
+
+```
+
+## Using Bayes' Rule to Calculate Conditional Probabilities
+Now, we have all of the necessary information to help Jamie understand what the positive test from a single oral sample really means. Recall that the simplified formula for Bayes' Rule is as follows:
+
+$Pr(A|B) = \dfrac{Pr(B|A)Pr(A)}{Pr(B)}$
+
+where A denotes 'Cancer' and B denotes a 'Positive Test'. Thus, the Pr(A|B) is what we're trying to calculate; the Pr(B|A) is the true positive rate; the Pr(A) is the prevalence of the disease; the Pr(B) is probability of a positive test, regardless of whether the individual has cancer. The Pr(B) is the true positive rate plus the false positive rate. 
+
+To determine the probability of having HIV given a positive test, we need to enter information regarding the test sensitivity and specificity. Then we can use Bayes' Rule to calculate the Pr(A|B).
+
+```{r, echo=TRUE}
+## Enter the data from the OraQuick test (update if needed)
+true.pos <- .9167  # From the test sensitivity
+false.neg <- .0833  # Converse rule (1 - true.pos)
+
+true.neg <- .999  # From the test specificity
+false.pos <- .001  # Converse rule (1 - true.neg)
+
+## Convert prevalence percentages into proportions 
+hiv$prop <- as.numeric(hiv$percent)/100
+
+## Numerator
+## Pr(B|A)Pr(A)
+numerator <- true.pos * hiv$prop
+
+## Denominator
+## Pr(B|A)Pr(A) + Pr(B|A')Pr(A')
+denominator <- (true.pos * hiv$prop) + (false.pos * (1-hiv$prop))
+
+## Apply Bayes' Rule
+hiv$pr.hiv <- numerator / denominator
+
+## Rank the Countries 
+hiv <- hiv[order(-hiv$pr.hiv, hiv$country), ]
+
+## Display probabilities by country
+subset(hiv, select = c(country, pr.hiv)) 
+
+```
+
+How likely is Jamie to have HIV given the single positive test result in the UK? Even with a test that is quite accurate, the conditional probability is does not approach 1. Is that surprising to you? 
+
+## Visualizing Global HIV Probabilities Given a Positive Test
+Now let's plot these conditi visually. Firstly, we can make an interactive Google bar plot visualization using the 'googleVis' package. What does this figure tell you?
+
+```{r, echo=TRUE}
+## Create the interactive figure
+bar.plot <- gvisBarChart(hiv, xvar = "country", yvar = "pr.hiv", 
+                         options = list(legend = "none",
+                                        vAxes = "[{textStyle:{fontSize: '16'}}]",
+                                        chartArea = "{left:250,top:10,bottom:10}",
+                                        width= 800, height = 3000) )
+plot(bar.plot)
+
+```
+
+Finally, let's visualize the data spatially using a choropleth with the 'tmap' package. We'll need to check that the country names in our hiv data match those in the world map shape file.
+
+```{r, echo = TRUE}
+## Sort by country (alphabetically)
+hiv <- hiv[order(hiv$country), ]
+
+## Load the world shape file
+data(World)
+
+## List countries in hiv data where names don't match shape file
+bad.names <- which(hiv$country %in% World@data$name == FALSE)
+subset(hiv[bad.names, ], select = "country")
+
+## Check country names in shape file
+countries <- as.character(World@data$name)
+countries
+
+## Make a vector names from the shape file
+good.names <- c("Bahamas", "Barbados", "Myanmar",
+                "Cape Verde", "Central African Rep.",
+                "Dem. Rep. Congo", "Congo", "Dominican Rep.", 
+                "Eq. Guinea", "Gambia", "Malta", "S. Sudan")
+
+## Replace 'bad' names with 'good' names
+hiv[bad.names, ]$country <- good.names
+
+## Check that the names all match
+## (no data for 3 countries even though they appear in the file)
+hiv$country %in% World@data$name
+
+## Display countries that don't match
+no.match <- which(hiv$country %in% World@data$name == FALSE)
+hiv[no.match, ]
+
+## Remove the 3 countries that don't match
+match <- which(hiv$country %in% World@data$name == TRUE)
+hiv2 <- hiv[match, ]
+
+## Add a new variable called 'name' for merging
+hiv2$name <- hiv2$country
+
+## Create a new data.frame for merging
+hiv3 <- data.frame(name = countries)
+
+## Merge
+hiv3 <- merge(hiv3, subset(hiv2, select = c("name", "pr.hiv")), by = "name", all = TRUE)
+
+## Append hiv data to map shape file
+hiv.map <- append_data(World, hiv3, key.shp = "name", key.data = "name")
+
+## Make the map
+map1 <- qtm(hiv.map, fill = "pr.hiv", format = "World", 
+            style = "gray", text.root = 5, 
+            fill.title = "Pr(HIV|Positive Test)", 
+            fill.textNA = "No data")
+map1
+
+```
+
+This semester you've learned how to create maps to spatially represent data. See if you can make choropleth of the world map data. Do you see any interesting patterns?
+
